@@ -2,19 +2,16 @@ import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { NewsArticle } from "@/types/news";
-import { Image, Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
 interface NewsCardProps {
   article: NewsArticle;
+  onPress: () => void;
 }
 
-export default function NewsCard({ article }: NewsCardProps) {
+export default function NewsCard({ article, onPress }: NewsCardProps) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
-
-  const handlePress = () => {
-    Linking.openURL(article.url);
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -37,7 +34,6 @@ export default function NewsCard({ article }: NewsCardProps) {
       return date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
-        year: "numeric",
       });
     }
   };
@@ -48,16 +44,14 @@ export default function NewsCard({ article }: NewsCardProps) {
         styles.card,
         { backgroundColor: colors.cardBackground, borderColor: colors.border },
       ]}
-      onPress={handlePress}
+      onPress={onPress}
       activeOpacity={0.7}
     >
-      {article.image_url && (
-        <Image
-          source={{ uri: article.image_url }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      )}
+      <Image
+        source={{ uri: article.image_url }}
+        style={styles.image}
+        resizeMode="cover"
+      />
       <View
         style={[styles.content, { backgroundColor: colors.cardBackground }]}
       >
@@ -66,20 +60,13 @@ export default function NewsCard({ article }: NewsCardProps) {
         </Text>
         <Text
           style={[styles.summary, { color: colors.secondaryText }]}
-          numberOfLines={3}
+          numberOfLines={2}
         >
           {article.summary}
         </Text>
-        <View
-          style={[styles.footer, { backgroundColor: colors.cardBackground }]}
-        >
-          <Text style={[styles.source, { color: colors.tint }]}>
-            {article.news_site}
-          </Text>
-          <Text style={[styles.date, { color: colors.secondaryText }]}>
-            {formatDate(article.published_at)}
-          </Text>
-        </View>
+        <Text style={[styles.meta, { color: colors.secondaryText }]}>
+          {article.news_site} • {formatDate(article.published_at)}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -87,40 +74,36 @@ export default function NewsCard({ article }: NewsCardProps) {
 
 const styles = StyleSheet.create({
   card: {
+    flexDirection: "row",
     borderRadius: 12,
     overflow: "hidden",
-    marginBottom: 16,
+    marginBottom: 12,
     borderWidth: 1,
+    padding: 12,
   },
   image: {
-    width: "100%",
-    height: 200,
+    width: 80,
+    height: 80,
+    borderRadius: 8,
     backgroundColor: "#E5E5EA",
   },
   content: {
-    padding: 16,
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "600",
-    marginBottom: 8,
-    lineHeight: 24,
+    lineHeight: 20,
+    marginBottom: 4,
   },
   summary: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 12,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  source: {
     fontSize: 13,
-    fontWeight: "600",
+    lineHeight: 18,
+    marginBottom: 4,
   },
-  date: {
-    fontSize: 13,
+  meta: {
+    fontSize: 12,
   },
 });

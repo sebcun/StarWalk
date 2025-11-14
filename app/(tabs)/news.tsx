@@ -1,4 +1,5 @@
 import NewsCard from "@/components/NewsCard";
+import NewsDetailModal from "@/components/NewsDetailModal";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
@@ -16,6 +17,10 @@ export default function NewsScreen() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(
+    null
+  );
+  const [modalVisible, setModalVisible] = useState(false);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
@@ -36,6 +41,16 @@ export default function NewsScreen() {
     setRefreshing(false);
   };
 
+  const handleArticlePress = (article: NewsArticle) => {
+    setSelectedArticle(article);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedArticle(null);
+  };
+
   useEffect(() => {
     loadNews();
   }, []);
@@ -49,23 +64,35 @@ export default function NewsScreen() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={colors.tint}
-        />
-      }
-    >
-      <View style={styles.content}>
-        <Text style={styles.title}>Space News</Text>
-        {articles.map((article) => (
-          <NewsCard key={article.id} article={article} />
-        ))}
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.tint}
+          />
+        }
+      >
+        <View style={styles.content}>
+          <Text style={styles.title}>Space News</Text>
+          {articles.map((article) => (
+            <NewsCard
+              key={article.id}
+              article={article}
+              onPress={() => handleArticlePress(article)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
+      <NewsDetailModal
+        article={selectedArticle}
+        visible={modalVisible}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 }
 
