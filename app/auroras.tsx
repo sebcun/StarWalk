@@ -81,7 +81,8 @@ export default function AurorasScreen() {
           />
         }
       >
-        <Text style={styles.title}>Aurora Forecast</Text>
+        <Text style={styles.title}>Current Forecast</Text>
+        <Text style={styles.subtitle}>Find the best time to see an Aurora</Text>
 
         <AuroraKpGauge kpValue={kpIndex} />
 
@@ -136,7 +137,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 24,
+    opacity: 0.7,
   },
   infoBox: {
     padding: 16,
