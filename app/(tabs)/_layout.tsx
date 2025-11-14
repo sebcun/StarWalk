@@ -14,6 +14,10 @@ export default function TabLayout() {
         <Label>Calendar</Label>
         <Icon sf="calendar" />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="news">
+        <Label>News</Label>
+        <Icon sf="newspaper.fill" />
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="sky">
         <Label>Sky</Label>
         <Icon sf="sparkles" />
