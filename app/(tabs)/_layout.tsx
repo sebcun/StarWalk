@@ -1,6 +1,5 @@
-import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
-
 import { useColorScheme } from "@/components/useColorScheme";
+import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -8,12 +7,16 @@ export default function TabLayout() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
-        <Label>One</Label>
-        <Icon sf="map.fill" drawable="custom_android_drawable" />
+        <Label>Home</Label>
+        <Icon sf="house.fill" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="two">
-        <Label>Two</Label>
-        <Icon sf="location.circle.fill" drawable="custom_android_drawable" />
+      <NativeTabs.Trigger name="calendar">
+        <Label>Calendar</Label>
+        <Icon sf="calendar" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="sky">
+        <Label>Sky</Label>
+        <Icon sf="sparkles" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );

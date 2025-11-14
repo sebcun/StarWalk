@@ -1,11 +1,11 @@
 import { Text, View } from "@/components/Themed";
 import { ScrollView, StyleSheet } from "react-native";
 
-export default function HomeScreen() {
+export default function CalendarScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Home</Text>
+        <Text style={styles.title}>Calendar</Text>
       </View>
     </ScrollView>
   );
