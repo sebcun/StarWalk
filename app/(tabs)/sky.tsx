@@ -17,36 +17,39 @@ export default function SkyScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Sky</Text>
-        <View style={styles.categoriesContainer}>
-          {skyCategories.map((category) => (
-            <TouchableOpacity
-              key={category.title}
-              style={[
-                styles.categoryCard,
-                {
-                  backgroundColor: colors.cardBackground,
-                  borderColor: colors.border,
-                },
-              ]}
-              onPress={() => router.push(category.route as any)}
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <Text style={styles.title}>Sky</Text>
+      <View
+        style={[
+          styles.categoriesContainer,
+          { backgroundColor: colors.background },
+        ]}
+      >
+        {skyCategories.map((category) => (
+          <TouchableOpacity
+            key={category.title}
+            style={[
+              styles.categoryCard,
+              {
+                backgroundColor: colors.cardBackground,
+                borderColor: colors.border,
+              },
+            ]}
+            onPress={() => router.push(category.route as any)}
+          >
+            <Text style={[styles.categoryTitle, { color: colors.text }]}>
+              {category.title}
+            </Text>
+            <Text
+              style={[styles.categorySubtitle, { color: colors.secondaryText }]}
             >
-              <Text style={[styles.categoryTitle, { color: colors.text }]}>
-                {category.title}
-              </Text>
-              <Text
-                style={[
-                  styles.categorySubtitle,
-                  { color: colors.secondaryText },
-                ]}
-              >
-                Tap to view
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+              Tap to view
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );
@@ -56,8 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
-    flex: 1,
+  contentContainer: {
     padding: 20,
   },
   title: {
@@ -72,10 +74,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     borderWidth: 1,
-  },
-  categoryIcon: {
-    fontSize: 40,
-    marginBottom: 8,
   },
   categoryTitle: {
     fontSize: 22,

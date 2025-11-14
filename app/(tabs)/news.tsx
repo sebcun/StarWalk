@@ -66,7 +66,8 @@ export default function NewsScreen() {
   return (
     <>
       <ScrollView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.background }]}
+        contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -75,16 +76,14 @@ export default function NewsScreen() {
           />
         }
       >
-        <View style={styles.content}>
-          <Text style={styles.title}>Space News</Text>
-          {articles.map((article) => (
-            <NewsCard
-              key={article.id}
-              article={article}
-              onPress={() => handleArticlePress(article)}
-            />
-          ))}
-        </View>
+        <Text style={styles.title}>Space News</Text>
+        {articles.map((article) => (
+          <NewsCard
+            key={article.id}
+            article={article}
+            onPress={() => handleArticlePress(article)}
+          />
+        ))}
       </ScrollView>
 
       <NewsDetailModal
@@ -105,8 +104,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  content: {
-    flex: 1,
+  contentContainer: {
     padding: 16,
   },
   title: {

@@ -71,7 +71,8 @@ export default function AurorasScreen() {
     <>
       <Stack.Screen options={{ title: "Auroras", headerBackTitle: "Back" }} />
       <ScrollView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: colors.background }]}
+        contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -80,42 +81,40 @@ export default function AurorasScreen() {
           />
         }
       >
-        <View style={styles.content}>
-          <Text style={styles.title}>Aurora Forecast</Text>
+        <Text style={styles.title}>Aurora Forecast</Text>
 
-          <AuroraKpGauge kpValue={kpIndex} />
+        <AuroraKpGauge kpValue={kpIndex} />
 
-          <AuroraInfoCard
-            level={conditions.level}
-            description={conditions.description}
-            northernLocations={conditions.northernLocations}
-            southernLocations={conditions.southernLocations}
-            visibility={conditions.visibility}
-            color={conditions.color}
-          />
+        <AuroraInfoCard
+          level={conditions.level}
+          description={conditions.description}
+          northernLocations={conditions.northernLocations}
+          southernLocations={conditions.southernLocations}
+          visibility={conditions.visibility}
+          color={conditions.color}
+        />
 
-          {forecast && forecast.length > 0 && (
-            <AuroraForecastChart forecast={forecast} />
-          )}
+        {forecast && forecast.length > 0 && (
+          <AuroraForecastChart forecast={forecast} />
+        )}
 
-          <View
-            style={[
-              styles.infoBox,
-              {
-                backgroundColor: colors.cardBackground,
-                borderColor: colors.border,
-              },
-            ]}
-          >
-            <Text style={[styles.infoTitle, { color: colors.text }]}>
-              About Kp Index
-            </Text>
-            <Text style={[styles.infoText, { color: colors.secondaryText }]}>
-              The Kp index measures geomagnetic activity on a scale of 0-9.
-              Higher values indicate stronger auroras visible at lower latitudes
-              in both hemispheres.
-            </Text>
-          </View>
+        <View
+          style={[
+            styles.infoBox,
+            {
+              backgroundColor: colors.cardBackground,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <Text style={[styles.infoTitle, { color: colors.text }]}>
+            About Kp Index
+          </Text>
+          <Text style={[styles.infoText, { color: colors.secondaryText }]}>
+            The Kp index measures geomagnetic activity on a scale of 0-9. Higher
+            values indicate stronger auroras visible at lower latitudes in both
+            hemispheres.
+          </Text>
         </View>
       </ScrollView>
     </>
@@ -131,8 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  content: {
-    flex: 1,
+  contentContainer: {
     padding: 16,
   },
   title: {
