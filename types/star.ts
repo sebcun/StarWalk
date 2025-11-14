@@ -22,3 +22,23 @@ export interface StarPosition {
   azimuth: number;
   visible: boolean;
 }
+
+export interface Constellation {
+  name: string;
+  latinName: string;
+  abbreviation: string;
+  description: string;
+  color: string;
+  facts: string[];
+  brightest: string;
+  visibility: {
+    hemisphere: string;
+    bestMonth: string;
+    season: string;
+  };
+  statistics: {
+    area: string;
+    stars: string;
+    rank: string;
+  };
+}
