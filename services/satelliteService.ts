@@ -1,3 +1,4 @@
+import { Config } from "@/config";
 import { PopularSatellite, Satellite } from "@/types/satellite";
 
 export const popularSatellites: PopularSatellite[] = [
@@ -130,10 +131,9 @@ export async function fetchSatellitePosition(
     const latitude = 0;
     const longitude = 0;
     const altitude = 0;
-    const apiKey = "EGHXQA-62NYVJ-EDNHN3-5LQO";
 
     const response = await fetch(
-      `https://api.n2yo.com/rest/v1/satellite/positions/${noradId}/${latitude}/${longitude}/${altitude}/1/&apiKey=${apiKey}`
+      `https://api.n2yo.com/rest/v1/satellite/positions/${noradId}/${latitude}/${longitude}/${altitude}/1/&apiKey=${Config.n2yoApiKey}`
     );
 
     if (!response.ok) {
