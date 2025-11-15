@@ -80,12 +80,6 @@ export default function APODWidget({
         <Text style={styles.title} numberOfLines={2}>
           {apod.title}
         </Text>
-        <Text
-          style={[styles.description, { color: colors.secondaryText }]}
-          numberOfLines={3}
-        >
-          {apod.explanation}
-        </Text>
         {apod.copyright && (
           <Text style={[styles.copyright, { color: colors.secondaryText }]}>
             © {apod.copyright}
