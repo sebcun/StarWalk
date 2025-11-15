@@ -1,11 +1,11 @@
 export default {
   expo: {
-    name: "StarWalk",
-    slug: "StarWalk",
+    name: "SkyBuddy",
+    slug: "SkyBuddy",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
-    scheme: "starwalk",
+    scheme: "skybuddy",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     splash: {
