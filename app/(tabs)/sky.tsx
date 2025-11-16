@@ -14,6 +14,7 @@ export default function SkyScreen() {
     { title: "Satellites", route: "/satellites" },
     { title: "Auroras", route: "/auroras" },
     { title: "Planets", route: "/planets" },
+    { title: "Rockets", route: "/rockets" },
   ];
 
   return (
