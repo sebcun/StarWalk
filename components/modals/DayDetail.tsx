@@ -11,6 +11,7 @@ interface DayOverviewModalProps {
   date: Date | null;
   apod: APOD | null;
   loading: boolean;
+  notReleased?: boolean;
   visible: boolean;
   onClose: () => void;
 }
@@ -19,6 +20,7 @@ export default function DayOverviewModal({
   date,
   apod,
   loading,
+  notReleased = false,
   visible,
   onClose,
 }: DayOverviewModalProps) {
@@ -81,6 +83,7 @@ export default function DayOverviewModal({
               <APODWidget
                 apod={apod}
                 loading={loading}
+                notReleased={notReleased}
                 onPress={handleAPODPress}
               />
             </View>

@@ -3,7 +3,9 @@ import { APOD } from "@/types/apod";
 
 const APOD_API_URL = "https://api.nasa.gov/planetary/apod";
 
-export async function fetchAPOD(date?: string): Promise<APOD | null> {
+export async function fetchAPOD(
+  date?: string
+): Promise<APOD | null | "not_released"> {
   try {
     let url = `${APOD_API_URL}?api_key=${Config.nasaApiKey}`;
 
@@ -12,6 +14,10 @@ export async function fetchAPOD(date?: string): Promise<APOD | null> {
     }
 
     const response = await fetch(url);
+
+    if (response.status === 404) {
+      return "not_released";
+    }
 
     if (!response.ok) {
       console.log(response);

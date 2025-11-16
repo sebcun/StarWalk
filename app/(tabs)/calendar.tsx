@@ -23,6 +23,7 @@ export default function CalendarScreen() {
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedAPOD, setSelectedAPOD] = useState<APOD | null>(null);
+  const [apodNotReleased, setApodNotReleased] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -111,11 +112,18 @@ export default function CalendarScreen() {
     setSelectedDate(date);
     setLoading(true);
     setModalVisible(true);
+    setApodNotReleased(false);
 
     const dateString = formatDateForAPI(day, month, year);
     const apod = await fetchAPOD(dateString);
 
-    setSelectedAPOD(apod);
+    if (apod === "not_released") {
+      setApodNotReleased(true);
+      setSelectedAPOD(null);
+    } else {
+      setSelectedAPOD(apod);
+      setApodNotReleased(false);
+    }
     setLoading(false);
   };
 
@@ -123,6 +131,7 @@ export default function CalendarScreen() {
     setModalVisible(false);
     setSelectedDate(null);
     setSelectedAPOD(null);
+    setApodNotReleased(false);
   };
 
   const canSelectDay = (day: number, month: number, year: number) => {
@@ -255,6 +264,7 @@ export default function CalendarScreen() {
         date={selectedDate}
         apod={selectedAPOD}
         loading={loading}
+        notReleased={apodNotReleased}
         visible={modalVisible}
         onClose={handleCloseModal}
       />
