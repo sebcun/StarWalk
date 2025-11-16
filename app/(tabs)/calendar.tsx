@@ -1,8 +1,16 @@
+import DayOverviewModal from "@/components/modals/DayDetail";
 import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { fetchAPOD } from "@/services/apodService";
+import { APOD } from "@/types/apod";
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 
 export default function CalendarScreen() {
   const colorScheme = useColorScheme();
@@ -13,6 +21,10 @@ export default function CalendarScreen() {
   const [monthLayouts, setMonthLayouts] = useState<{ [key: string]: number }>(
     {}
   );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedAPOD, setSelectedAPOD] = useState<APOD | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const monthNames = [
     "January",
@@ -81,6 +93,44 @@ export default function CalendarScreen() {
     );
   };
 
+  const formatDateForAPI = (day: number, month: number, year: number) => {
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
+    return dateString;
+  };
+
+  const handleDayPress = async (day: number, month: number, year: number) => {
+    const date = new Date(year, month, day);
+    const apodStartDate = new Date(1995, 5, 16);
+
+    if (date < apodStartDate || date > today) {
+      return;
+    }
+
+    setSelectedDate(date);
+    setLoading(true);
+    setModalVisible(true);
+
+    const dateString = formatDateForAPI(day, month, year);
+    const apod = await fetchAPOD(dateString);
+
+    setSelectedAPOD(apod);
+    setLoading(false);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedDate(null);
+    setSelectedAPOD(null);
+  };
+
+  const canSelectDay = (day: number, month: number, year: number) => {
+    const date = new Date(year, month, day);
+    const apodStartDate = new Date(1995, 5, 16);
+    return date >= apodStartDate && date <= today;
+  };
+
   const months = generateMonths();
 
   const handleMonthLayout = (
@@ -108,81 +158,107 @@ export default function CalendarScreen() {
   }, [monthLayouts, windowHeight]);
 
   return (
-    <ScrollView
-      ref={scrollViewRef}
-      style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      {months.map((monthData, index) => {
-        const calendarDays = generateCalendarDays(
-          monthData.month,
-          monthData.year
-        );
-        const monthKey = `${monthData.year}-${monthData.month}`;
+    <>
+      <ScrollView
+        ref={scrollViewRef}
+        style={[styles.container, { backgroundColor: colors.background }]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {months.map((monthData, index) => {
+          const calendarDays = generateCalendarDays(
+            monthData.month,
+            monthData.year
+          );
+          const monthKey = `${monthData.year}-${monthData.month}`;
 
-        return (
-          <View
-            key={monthKey}
-            style={styles.monthContainer}
-            onLayout={(event) => handleMonthLayout(monthKey, event)}
-          >
-            <Text style={[styles.monthHeader, { color: colors.text }]}>
-              {monthNames[monthData.month]} {monthData.year}
-            </Text>
+          return (
+            <View
+              key={monthKey}
+              style={styles.monthContainer}
+              onLayout={(event) => handleMonthLayout(monthKey, event)}
+            >
+              <Text style={[styles.monthHeader, { color: colors.text }]}>
+                {monthNames[monthData.month]} {monthData.year}
+              </Text>
 
-            <View style={styles.dayNamesContainer}>
-              {dayNames.map((day, i) => (
-                <View key={i} style={styles.dayNameCell}>
-                  <Text
-                    style={[styles.dayName, { color: colors.secondaryText }]}
-                  >
-                    {day}
-                  </Text>
-                </View>
-              ))}
-            </View>
-
-            <View style={styles.daysContainer}>
-              {calendarDays.map((day, dayIndex) => (
-                <View key={dayIndex} style={styles.dayCell}>
-                  {day && (
-                    <View
-                      style={[
-                        styles.dayNumber,
-                        isToday(day, monthData.month, monthData.year) && {
-                          backgroundColor: colors.tint,
-                          borderRadius: 20,
-                        },
-                      ]}
+              <View style={styles.dayNamesContainer}>
+                {dayNames.map((day, i) => (
+                  <View key={i} style={styles.dayNameCell}>
+                    <Text
+                      style={[styles.dayName, { color: colors.secondaryText }]}
                     >
-                      <Text
+                      {day}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.daysContainer}>
+                {calendarDays.map((day, dayIndex) => (
+                  <View key={dayIndex} style={styles.dayCell}>
+                    {day && (
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleDayPress(day, monthData.month, monthData.year)
+                        }
+                        disabled={
+                          !canSelectDay(day, monthData.month, monthData.year)
+                        }
                         style={[
-                          styles.dayText,
-                          {
-                            color: isToday(day, monthData.month, monthData.year)
-                              ? "#FFFFFF"
-                              : colors.text,
+                          styles.dayNumber,
+                          isToday(day, monthData.month, monthData.year) && {
+                            backgroundColor: colors.tint,
+                            borderRadius: 20,
                           },
                         ]}
                       >
-                        {day}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-              ))}
-            </View>
+                        <Text
+                          style={[
+                            styles.dayText,
+                            {
+                              color: isToday(
+                                day,
+                                monthData.month,
+                                monthData.year
+                              )
+                                ? "#FFFFFF"
+                                : canSelectDay(
+                                    day,
+                                    monthData.month,
+                                    monthData.year
+                                  )
+                                ? colors.text
+                                : colors.border,
+                            },
+                          ]}
+                        >
+                          {day}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ))}
+              </View>
 
-            {index < months.length - 1 && (
-              <View
-                style={[styles.separator, { backgroundColor: colors.border }]}
-              />
-            )}
-          </View>
-        );
-      })}
-    </ScrollView>
+              {index < months.length - 1 && (
+                <View
+                  style={[styles.separator, { backgroundColor: colors.border }]}
+                />
+              )}
+            </View>
+          );
+        })}
+      </ScrollView>
+
+      <DayOverviewModal
+        date={selectedDate}
+        apod={selectedAPOD}
+        loading={loading}
+        visible={modalVisible}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 }
 

@@ -1,13 +1,20 @@
+import { Config } from "@/config";
 import { APOD } from "@/types/apod";
 
-const NASA_API_KEY = "DEMO_KEY";
 const APOD_API_URL = "https://api.nasa.gov/planetary/apod";
 
-export async function fetchAPOD(): Promise<APOD | null> {
+export async function fetchAPOD(date?: string): Promise<APOD | null> {
   try {
-    const response = await fetch(`${APOD_API_URL}?api_key=${NASA_API_KEY}`);
+    let url = `${APOD_API_URL}?api_key=${Config.nasaApiKey}`;
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    const response = await fetch(url);
 
     if (!response.ok) {
+      console.log(response);
       throw new Error("Failed to fetch APOD");
     }
 
